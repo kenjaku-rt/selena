@@ -1,0 +1,16 @@
+{
+    "configurations": [
+        {
+            "name": "MSYS2",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "C:/Utils/msys64/usr/lib/gcc/x86_64-pc-msys/13.3.0/**"
+            ],
+            "compilerPath": "C:/Utils/msys64/usr/bin/clang++.exe",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "linux-clang-x64"
+        }
+    ],
+    "version": 4
+}
