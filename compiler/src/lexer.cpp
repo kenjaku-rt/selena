@@ -1,53 +1,21 @@
-#include "lexer.h"
+#include <lexer.h>
 
-typedef enum {
-    SLN_TOKEN_EOF,
+// sln_token_type_t
+// sln_token_t
+// sln_token_buffer_t
 
-    SLN_TOKEN_KEYWORD,
-    SLN_TOKEN_TYPE,
-    SLN_TOKEN_IDENTIFIER,
-
-    SLN_TOKEN_LITERAL_STRING,
-    SLN_TOKEN_LITERAL_INTEGER,
-    SLN_TOKEN_LITERAL_UINTEGER,
-    SLN_TOKEN_LITERAL_DECIMAL,
-
-    SLN_TOKEN_OPERATOR,
-    SLN_TOKEN_BRACKET,
-    SLN_TOKEN_NEWLINE,
-
-} sln_token_type_t;
-
-typedef struct {
-    sln_token_type_t type;
-    union {
-        struct {
-            char* data;
-            size_t length;
-        } string;
-        long double decimal;
-        int64_t     i64;
-        uint64_t    u64;
-    };
-} sln_token_t;
-
-typedef struct {
-    sln_token_t* tokens;
-    size_t num_of_tokens;
-} sln_token_buffer_t;
-
-sln_token_buffer_t sln_token_buffer_allocate(size_t num_of_token) {
+static sln_token_buffer_t sln_token_buffer_allocate(size_t num_of_token) {
     sln_token_buffer_t buffer;
     buffer.num_of_tokens = num_of_token;
     buffer.tokens = (sln_token_t*)calloc(num_of_token, sizeof(sln_token_t));
     return buffer;
 }
 
-bool sln_token_buffer_valid(sln_token_buffer_t buffer) {
+static bool sln_token_buffer_valid(sln_token_buffer_t buffer) {
     return (buffer.num_of_tokens != 0UL && buffer.tokens != NULL);
 }
 
-void sln_token_buffer_free(sln_token_buffer_t* buffer) {
+static void sln_token_buffer_free(sln_token_buffer_t* buffer) {
     if (!buffer)
         return;
     if (buffer->tokens) {
@@ -108,8 +76,7 @@ typedef enum {
 sln_number_type_t sln_detect_int_type(const char* str) {
     int len = sln_strlen<char, _sln_is_digit>(str);
 
-    if (len < 19) return SLN_INT64;
-    if (len == 19) return (strcmp(str, "9223372036854775807") <= 0) ? SLN_INT64 : SLN_UINT64;
+    if (len < 19) return SLN_UINT64;
     if (len == 20) return (strcmp(str, "18446744073709551615") <= 0) ? SLN_UINT64 : SLN_INVALID;
     return SLN_INVALID;
 }
@@ -205,44 +172,8 @@ static const char* _sln_types_lookup[] = {
 #undef X
 };
 
-typedef enum {
-    SLN_OPERATOR_INVALID,
-
-    // arithmetic
-    SLN_OPERATOR_PLUS,
-    SLN_OPERATOR_MINUS,
-    SLN_OPERATOR_MUL,
-    SLN_OPERATOR_DIV,
-    SLN_OPERATOR_MOD,
-
-    // logic
-    SLN_OPERATOR_LESS,
-    SLN_OPERATOR_GREATER,
-    SLN_OPERATOR_EQUAL,
-    // ! - SLN_OPERATOR_EXCL_MARK
-
-    // Binary
-    SLN_OPERATOR_BITWISE_AND,
-    SLN_OPERATOR_BITWISE_OR,
-    SLN_OPERATOR_BITWISE_NOT,
-    SLN_OPERATOR_BITWISE_XOR,
-
-    // Other
-    SLN_OPERATOR_COMMA,
-    SLN_OPERATOR_EXCL_MARK,
-} sln_operator_t;
-
-typedef enum {
-
-    SLN_BRACKET_ROUND_L,
-    SLN_BRACKET_CURLY_L,
-    SLN_BRACKET_SQUARE_L,
-
-    SLN_BRACKET_ROUND_R,
-    SLN_BRACKET_CURLY_R,
-    SLN_BRACKET_SQUARE_R,
-} sln_bracket_t;
-
+// sln_operator_t
+// sln_bracket_t
 
 #define SLN_KEYWORD_MAX_LEN 5
 #define SLN_NUMBER_OF_KEYWORDS sizeof(_sln_keywords_lookup) / sizeof(_sln_keywords_lookup[0])
@@ -371,11 +302,6 @@ int sln_tokenize(const char* text, sln_token_buffer_t* target_buffer) {
             sln_number_type_t type = sln_detect_number_type(text_cursor, &text_substep);
             
             switch (type) {
-                case SLN_INT64:
-                    // можно систему счисления поменять на лету.
-                    buffer.tokens[token_i].u64 = strtoll(text_cursor, NULL, 10);
-                    buffer.tokens[token_i].type = SLN_TOKEN_LITERAL_INTEGER;
-                    break;
                 case SLN_UINT64:
                     buffer.tokens[token_i].u64 = strtoull(text_cursor, NULL, 10);
                     buffer.tokens[token_i].type = SLN_TOKEN_LITERAL_UINTEGER;
@@ -463,7 +389,7 @@ int sln_tokenize(const char* text, sln_token_buffer_t* target_buffer) {
                 case '(':
                     printf("OPENED [%c]\n", symbol);
                     st.push(symbol);
-                    buffer.tokens[token_i].type = SLN_TOKEN_OPERATOR;
+                    buffer.tokens[token_i].type = SLN_TOKEN_BRACKET;
                     buffer.tokens[token_i].u64 = get_bracket_from(symbol);
                     break;
                 case ']':
@@ -472,7 +398,7 @@ int sln_tokenize(const char* text, sln_token_buffer_t* target_buffer) {
                     printf("CLOSED [%c]\n", symbol);
                     if (!st.empty() && st.top() == get_open_bracket_for(symbol)) {
                         st.pop();
-                        buffer.tokens[token_i].type = SLN_TOKEN_OPERATOR;
+                        buffer.tokens[token_i].type = SLN_TOKEN_BRACKET;
                         buffer.tokens[token_i].u64 = get_bracket_from(symbol);
                     } else {
                         printf("STACK EMPTY: %c", st.top());
@@ -549,33 +475,66 @@ error_handler:
     return 1;
 }
 
+
+char get_char_from_operator(sln_operator_t op) {
+    switch (op) {
+        case SLN_OPERATOR_EXCL_MARK:    return '!';
+        case SLN_OPERATOR_COMMA:        return ':';
+        case SLN_OPERATOR_EQUAL:        return '=';
+        case SLN_OPERATOR_LESS:         return '<';
+        case SLN_OPERATOR_GREATER:      return '>';
+        case SLN_OPERATOR_BITWISE_NOT:  return '~';
+        case SLN_OPERATOR_BITWISE_AND:  return '&';
+        case SLN_OPERATOR_BITWISE_OR:   return '|';
+        case SLN_OPERATOR_BITWISE_XOR:  return '^';
+        case SLN_OPERATOR_PLUS:         return '+';
+        case SLN_OPERATOR_MINUS:        return '-';
+        case SLN_OPERATOR_MUL:          return '*';
+        case SLN_OPERATOR_DIV:          return '/';
+        case SLN_OPERATOR_MOD:          return '%';
+        default : return SLN_OPERATOR_INVALID;
+    }
+}
+
+char get_char_from_bracket(sln_bracket_t bracket) {
+    switch (bracket) {
+        case SLN_BRACKET_ROUND_L:    return '(';
+        case SLN_BRACKET_CURLY_L:    return '{';
+        case SLN_BRACKET_SQUARE_L:   return '[';
+        case SLN_BRACKET_ROUND_R:    return ')';
+        case SLN_BRACKET_CURLY_R:    return '}';
+        case SLN_BRACKET_SQUARE_R:   return ']';
+    }
+    __builtin_unreachable();
+}
+
 void print_token(sln_token_t token) {
     switch (token.type) {
     case SLN_TOKEN_KEYWORD:
-        printf("%s(SLN_TOKEN_KEYWORD)\n", _sln_keywords_lookup[token.u64]);
+        printf("[KW]:%s\n", _sln_keywords_lookup[token.u64]);
         break;
     case SLN_TOKEN_TYPE:
-        printf("%s(SLN_TOKEN_TYPE)\n", _sln_types_lookup[token.u64]);
+        printf("[TYPE]:%s\n", _sln_types_lookup[token.u64]);
         break;
     case SLN_TOKEN_IDENTIFIER:
-        printf("%s(SLN_TOKEN_IDENTIFIER)\n", token.string.data);
+        printf("[ID]:%s\n", token.string.data);
         break;
     case SLN_TOKEN_LITERAL_STRING:
-        printf("%s(SLN_TOKEN_LITERAL_STRING)\n", token.string.data);
+        printf("[STR]:%s\n", token.string.data);
         break;
-    case SLN_TOKEN_LITERAL_INTEGER:
-        printf("%lu(SLN_TOKEN_LITERAL_INTEGER)\n", token.u64);
+    case SLN_TOKEN_LITERAL_UINTEGER:
+        printf("[INT]:%lu\n", token.u64);
         break;
     case SLN_TOKEN_LITERAL_DECIMAL:
-        printf("%lu(SLN_TOKEN_LITERAL_DECIMAL)\n", token.u64);
-        break;
+        printf("[DEC]:%lu\n", token.u64);
+        break;  
     
     case SLN_TOKEN_BRACKET:
-        printf("%lu(SLN_TOKEN_BRACKET)\n", token.u64);
+        printf("[BR]:%c\n", get_char_from_bracket(static_cast<sln_bracket_t>(token.u64)));
         break;
 
     case SLN_TOKEN_OPERATOR:
-        printf("%lu(SLN_TOKEN_OPERATOR)\n", token.u64);
+        printf("[OP]:%c\n", get_char_from_operator(static_cast<sln_operator_t>(token.u64)));
         break;
 
     default:
@@ -586,35 +545,7 @@ void print_token(sln_token_t token) {
 
 /* ======================================== */
 
-const char* text = 
-"a:i32 = 100     # Muichiro Tokito was here :->\n"
-"b:i64! = 0xFFFF\n"
-"\n"
-"c:str = \"Moon breathing :::->\"\n"
-"\n"
-"if (a != b) {"
-"\tprint(\"a != b\")\n"
-"} else {"
-"\tprint(\"a == b\")\n"
-"}\n"
-"";
-
-int main(void) {
-    printf("selena\n");
-    sln_token_buffer_t buffer = (sln_token_buffer_t){
-        .num_of_tokens = 0
-    };
-    printf("%d - status;", sln_tokenize(text, &buffer));
-
-    printf("Tokens: (%lu)\n", buffer.num_of_tokens);
-    for (size_t i = 0; i < buffer.num_of_tokens; ++i) {
-        print_token(buffer.tokens[i]);
-        if (buffer.tokens[i].type == SLN_TOKEN_EOF)
-            break;
-    }
-
-    return 0;
-}
+// Завершено. Нет многострочных комментариев и экранирования символов.
 
 
 /*
