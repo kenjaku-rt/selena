@@ -32,15 +32,15 @@
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/othneildrew/Best-README-Template.svg?style=for-the-badge
+[contributors-shield]: https://img.shields.io/github/contributors/kokushibo-rt/selena.svg?style=for-the-badge
 [contributors-url]: https://github.com/kokushibo-rt/selena/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/othneildrew/Best-README-Template.svg?style=for-the-badge
+[forks-shield]: https://img.shields.io/github/forks/kokushibo-rt/selena.svg?style=for-the-badge
 [forks-url]: https://github.com/kokushibo-rt/selena/forks
-[stars-shield]: https://img.shields.io/github/stars/othneildrew/Best-README-Template.svg?style=for-the-badge
+[stars-shield]: https://img.shields.io/github/stars/kokushibo-rt/selena.svg?style=for-the-badge
 [stars-url]: https://github.com/kokushibo-rt/selena/stargazers
-[issues-shield]: https://img.shields.io/github/issues/othneildrew/Best-README-Template.svg?style=for-the-badge
+[issues-shield]: https://img.shields.io/github/issues/kokushibo-rt/selena.svg?style=for-the-badge
 [issues-url]: https://github.com/kokushibo-rt/selena/issues
-[license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
+[license-shield]: https://img.shields.io/github/license/kokushibo-rt/selena.svg?style=for-the-badge
 [license-url]: https://github.com/kokushibo-rt/selena/blob/master/LICENSE
 [product-screenshot]: images/screenshot.png
 [Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
