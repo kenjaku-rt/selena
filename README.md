@@ -19,6 +19,7 @@
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
 [![Contributors][contributors-shield]][contributors-url]
+[![Commits][commits-shield]][commits-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
@@ -32,6 +33,8 @@
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[commits-shield]: https://img.shields.io/github/commit-activity/w/kokushibo-rt/selena.svg?style=for-the-badge
+[commits-url]: https://github.com/kokushibo-rt/selena/graphs/commit-activity
 [contributors-shield]: https://img.shields.io/github/contributors/kokushibo-rt/selena.svg?style=for-the-badge
 [contributors-url]: https://github.com/kokushibo-rt/selena/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/kokushibo-rt/selena.svg?style=for-the-badge
