@@ -25,9 +25,41 @@
 [![Unlicense License][license-shield]][license-url]
 
 <!-- MAIN PART -->
-# Selena programming language. AVR arch compiler
+# Selena programming language
+
+***А compiler with a declarative system for extending functionality and optimization.***
 
 [![Selena Logo][product-screenshot]]()
+
+# General information
+
+## Paradigm: procedural, object-oriented
+
+```selena
+
+use cli::io;
+
+# Functions
+
+func1():nil {
+    cli::io.println("This is function 1");
+}
+
+# Structures
+
+
+
+MAIN():main::exit_status {
+    func1();
+}
+
+```
+
+## Execution: compilation on OS or embedded. C-like abilities
+
+## Style: `C/C++`, `Rust`, `Lua`, `Julia`
+
+## Was inspired by `Rust`, `C`
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
