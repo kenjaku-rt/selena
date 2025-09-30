@@ -14,7 +14,7 @@ static HANDLE _out_handle;
 
 static bool _sln_color_is_enable = false;
 
-void sln_util_cli_color_enable(FILE* stream) {
+void sln_utils_cli_color_enable(FILE* stream) {
 #if defined(_WIN32)
     _out_handle = (HANDLE)_get_osfhandle(fileno(stream));
     // no-op on Linux
@@ -32,7 +32,7 @@ static const char* _ansi_txt_color_seq[] = {
     "\x1B[1;31m", "\x1B[1;35m", "\x1B[1;33m", "\x1B[1;37m"
 };
 
-void sln_util_cli_color_set(FILE* stream, sln_util_cli_color_t text_clr) {
+void sln_utils_cli_color_set(FILE* stream, sln_utils_cli_color_t text_clr) {
     if (!_sln_color_is_enable)
         return;
 #if defined(__linux__)

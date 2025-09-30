@@ -2,7 +2,7 @@
 
 sln_exit_code_t main(int argc, char* argv[]) {
 
-    sln_util_cli_color_enable(stdout);
+    sln_utils_cli_color_enable(stdout);
 
     if (argc < 2) {
         

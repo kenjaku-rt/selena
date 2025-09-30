@@ -8,6 +8,7 @@ typedef enum {
     SLN_LEX_OK,
     SLN_LEX_NO_FILE,
     SLN_LEX_NO_ERROR_STREAM,
+    SLN_LEX_NO_TOKEN_BUFFER,
 } sln_lex_error_t;
 
 

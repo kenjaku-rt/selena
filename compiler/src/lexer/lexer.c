@@ -5,17 +5,22 @@
 #include <stddef.h>
 #include <ctype.h>
 
+#include <utils/allocation.h>
 #include <lexer/lexer.h>
 #include <lexer/lexer_errors.h>
+
+#define SLN_LEXER_INITIAL_SIZE 1024UL
 
 sln_lex_error_t sln_lex_generate(const char* text, sln_lex_token_buffer_t* buffer, FILE* error_stream) {
     if (!text)
         return SLN_LEX_NO_FILE;
     if (!error_stream)
         return SLN_LEX_NO_ERROR_STREAM;
+    if (!buffer)
+        return SLN_LEX_NO_TOKEN_BUFFER;
 
-
-    if 
+    buffer->tokens = SLN_ALLOC()
+    buffer->len = SLN_LEXER_INITIAL_SIZE;
 
     for (size_t text_i = 0; text[text_i] != '\0'; ++text_i) {
         
