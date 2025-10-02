@@ -117,7 +117,7 @@ typedef enum {
     SLN_LEX_TOKEN_RBRACKET,   /**< ] */
     SLN_LEX_TOKEN_SEMICOLON,  /**< ; */
 
-    SLN_LEX_TOKEN_COUNT       /**< Number of tokens */
+    _SLN_LEX_TOKEN_COUNT       /**< Number of tokens */
 } sln_lex_token_type_t;
 
 /**

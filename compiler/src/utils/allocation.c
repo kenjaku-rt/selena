@@ -8,11 +8,15 @@
 
 static FILE *_sln_utils_error_stream = NULL;
 
-bool sln_utils_alloc_set_stream(FILE const* error_stream) {
+int sln_utils_alloc_set_stream(FILE* error_stream) {
+    if (!error_stream)
+        return 1;
     _sln_utils_error_stream = error_stream;
+    return 0;
 }
 
-void* sln_utils_alloc(size_t num, size_t size_of_element, FILE* error_stream, const char* function_info) {
+void* sln_utils_alloc(size_t num, size_t size_of_element, const char* function_info) {
+    
     void* buff = calloc(num, size_of_element);
     if (buff != NULL) {
         return buff;
@@ -20,17 +24,17 @@ void* sln_utils_alloc(size_t num, size_t size_of_element, FILE* error_stream, co
 
     size_t total_bytes = num * size_of_element;
 
-    if (error_stream) {
-        sln_utils_cli_color_set(error_stream, SLN_UTILS_CLI_COLOR_WHITE);
-        fputs("[", error_stream);
+    if (_sln_utils_error_stream) {
+        sln_utils_cli_color_set(_sln_utils_error_stream, SLN_UTILS_CLI_COLOR_WHITE);
+        fputs("[", _sln_utils_error_stream);
 
-        sln_utils_cli_color_set(error_stream, SLN_UTILS_CLI_COLOR_LIGHTRED);
-        fputs("Internal error", error_stream);
+        sln_utils_cli_color_set(_sln_utils_error_stream, SLN_UTILS_CLI_COLOR_LIGHTRED);
+        fputs("Internal error", _sln_utils_error_stream);
 
-        sln_utils_cli_color_set(error_stream, SLN_UTILS_CLI_COLOR_WHITE);
-        fprintf(error_stream, "]: Allocation failure (%zu bytes) in %s.\n", total_bytes, function_info);
+        sln_utils_cli_color_set(_sln_utils_error_stream, SLN_UTILS_CLI_COLOR_WHITE);
+        fprintf(_sln_utils_error_stream, "]: Allocation failure (%zu bytes) in %s.\n", total_bytes, function_info);
 
-        fflush(error_stream);
+        fflush(_sln_utils_error_stream);
     }
 
     return NULL;
