@@ -9,7 +9,9 @@
         "stdio.h": "c",
         "compare": "c",
         "type_traits": "c",
-        "utility": "c"
+        "utility": "c",
+        "allocation.h": "c",
+        "stdint.h": "c"
     },
     "cmake.sourceDirectory": "/home/kokushibo/Projects/github/selena/compiler",
     "julia.environmentPath": "/home/kokushibo/Projects/github/selena"

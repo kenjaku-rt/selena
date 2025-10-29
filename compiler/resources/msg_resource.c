@@ -8,7 +8,7 @@ const char* _msg_resource[] = {
     [SLN_MSG_INIT_WARN] = "Warning",
     [SLN_MSG_INIT_ERRR] = "Error",
 
-    [SLN_MSG_NO_ARGS] = "Bla bla bla.",
+    [SLN_MSG_NO_ARGS] = "no input files",
 
 };
 

@@ -54,6 +54,7 @@ target_sources(selena PRIVATE
     src/utils/allocation.c
     src/utils/cli_colors.c
     src/utils/msg_errors.c
+    src/lexer/lexer.c
     src/selena.c
     src/main.c
 )

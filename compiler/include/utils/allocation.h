@@ -25,7 +25,7 @@ void* sln_utils_alloc(size_t num, size_t size_of_element, const char* function_i
  * @brief Macros for debuggin name of the function
  */
 #define SLN_ALLOC(num, type) \
-    (type*)sln_utils_alloc((num), sizeof(type), __PRETTY_FUNCTION__)
+    (type*)sln_utils_alloc((num), sizeof(type), __func__)
 
 
 #endif // SELENA_UTILS_ALLOCATION_H_

@@ -24,7 +24,8 @@
 typedef enum {
     // --- Special ---
     SLN_LEX_TOKEN_EOF,        /**< End of file */
-    SLN_LEX_TOKEN_EON,        /**< End of line */
+    SLN_LEX_TOKEN_EOL,        /**< End of line */
+    SLN_LEX_TOKEN_COMMENT,    /**< Comments # and ## ## */
     SLN_LEX_TOKEN_UNKNOWN,    /**< Unknown/invalid token */
 
     // --- Identifiers & literals ---
@@ -51,6 +52,21 @@ typedef enum {
     SLN_LEX_TOKEN_KW_DEFAULT,
     SLN_LEX_TOKEN_KW_BREAK,
     SLN_LEX_TOKEN_KW_CONTINUE,
+
+    SLN_LEX_TOKEN_KW_NIL,
+    SLN_LEX_TOKEN_KW_I8,
+    SLN_LEX_TOKEN_KW_I16,
+    SLN_LEX_TOKEN_KW_I32,
+    SLN_LEX_TOKEN_KW_I64,
+    SLN_LEX_TOKEN_KW_U8,
+    SLN_LEX_TOKEN_KW_U16,
+    SLN_LEX_TOKEN_KW_U32,
+    SLN_LEX_TOKEN_KW_U64,
+    SLN_LEX_TOKEN_KW_BLN,
+    SLN_LEX_TOKEN_KW_USIZE,
+    SLN_LEX_TOKEN_KW_STR,
+    SLN_LEX_TOKEN_KW_MAIN,
+    SLN_LEX_TOKEN_KW_ARGS,
 
     // --- Operators ---
     // Arithmetic
@@ -127,13 +143,12 @@ typedef enum {
 typedef struct {
     sln_lex_token_type_t type;
     union {
-        const char* cstr;   /**< For identifiers, strings */
+        char* cstr;         /**< For identifiers, strings (dynamically allocated) */
         uint64_t u64;       /**< For unsigned literals */
         int64_t i64;        /**< For signed literals */
         long double lfloat; /**< For floating literals */
     } data;
 } sln_lex_token_t;
-
 /**
  * @struct sln_lex_token_buffer_t
  * @brief Buffer of tokens, used as lexer output.
@@ -155,5 +170,7 @@ extern sln_lex_error_t sln_lex_generate(
     const char* text,
     sln_lex_token_buffer_t* buffer,
     FILE* error_stream);
+
+extern void sln_lex_free_tokens(sln_lex_token_buffer_t* buffer);
 
 #endif // SELENA_LEXER_H_

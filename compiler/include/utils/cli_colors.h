@@ -44,9 +44,14 @@ typedef enum {
  * On Linux this does nothing, as ANSI codes are always supported.
  * On Windows it initializes the console handle.
  *
- * @param stream Output stream (stdout/stderr).
+ * @param[in] stream Output stream (stdout/stderr).
  */
 void sln_utils_cli_color_enable(FILE* stream);
+
+/**
+ * @brief Disable console coloring.
+ */
+void sln_utils_cli_color_disable(void);
 
 /**
  * @brief Set text color for a given output stream.
@@ -54,8 +59,8 @@ void sln_utils_cli_color_enable(FILE* stream);
  * On Linux, writes ANSI escape codes.
  * On Windows, calls SetConsoleTextAttribute().
  *
- * @param stream Output stream (stdout/stderr).
- * @param text_clr Desired text color.
+ * @param[in] stream Output stream (stdout/stderr).
+ * @param[in] text_clr Desired text color.
  */
 void sln_utils_cli_color_set(FILE* stream, sln_utils_cli_color_t text_clr);
 

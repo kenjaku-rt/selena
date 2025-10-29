@@ -24,6 +24,10 @@ void sln_utils_cli_color_enable(FILE* stream) {
     _sln_color_is_enable = true;
 }
 
+void sln_utils_cli_color_disable(void) {
+    _sln_color_is_enable = false;
+}
+
 /* ANSI escape sequences for Linux/Unix terminals */
 static const char* _ansi_txt_color_seq[] = {
     "\x1B[0;30m", "\x1B[0;34m", "\x1B[0;32m", "\x1B[0;36m",
